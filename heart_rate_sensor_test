@@ -1,0 +1,72 @@
+// Include the necessary libraries
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_MAX30105.h>
+
+// Create an object of the MAX30105 sensor
+Adafruit_MAX30105 particleSensor;
+
+// Variables to store heart rate data
+int heartRate;
+int8_t lastBeat;
+
+void setup() {
+    // Initialize the serial communication
+    Serial.begin(115200);
+
+    // Initialize the sensor
+    if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) {
+        Serial.println("Could not find a valid MAX30105 sensor, check wiring!");
+        while (1);
+    }
+
+    // Configure the sensor settings
+    particleSensor.setup(0x1F, 4, 400, 411, 4096); // Configure sensor with default settings
+
+    // Set the sample rate to 1000Hz
+    particleSensor.setPulseAmplitudeRed(0x0A);
+    particleSensor.setPulseAmplitudeGreen(0);
+
+    // Initialize the heart rate variables
+    heartRate = 0;
+    lastBeat = -1;
+}
+
+void loop() {
+    // Read the heart rate data from the sensor
+    int32_t irValue = particleSensor.getIR();
+
+    // Check if a heartbeat is detected
+    if (checkForBeat(irValue)) {
+        // Calculate the heart rate
+        heartRate = 60 / (millis() - lastBeat) * 1000;
+
+        // Store the current beat time
+        lastBeat = millis();
+
+        // Print the heart rate
+        Serial.print("Heart Rate: ");
+        Serial.println(heartRate);
+    }
+}
+
+boolean checkForBeat(int32_t sample) {
+    // Detect a beat by finding the maximum value in a given time window
+    static int32_t beatThreshold;
+    static boolean beatDetected = false;
+
+    if (sample > beatThreshold && !beatDetected) {
+        beatThreshold = sample;
+    }
+
+    if (sample < beatThreshold && beatDetected) {
+        beatDetected = false;
+    }
+
+    if (sample > beatThreshold && !beatDetected) {
+        beatDetected = true;
+        return true;
+    }
+
+    return false;
+}
