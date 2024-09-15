@@ -1,0 +1,20 @@
+git add . # adds all
+git add "name of file"
+git commit -m "commit message"
+git push
+git clone {HTTPS Address} # adds the repository onto local folder
+
+process
+1. git clone
+2. add files.
+3. git commit
+4. git push
+
+for Linux:
+1. git clone
+  a. use regular address
+  b. use key saved in docuents for password
+2. continue as above
+
+For Formatting commit messages:
+- "commit {date in 24-hour format} MMDDYYYY"
