@@ -1,0 +1,20 @@
+// Arduino code
+
+// Define the sensor pin
+const int sensorPin = 5;
+
+void setup() {
+  // Start the Serial communication to send data to the computer
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Read the sensor value
+  int sensorValue = analogRead(sensorPin);
+
+  // Print the sensor value to the Serial Monitor
+  Serial.println(sensorValue);
+
+  // Wait for a second before reading the sensor again
+  delay(1000);
+}
