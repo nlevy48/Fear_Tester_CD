@@ -3,6 +3,10 @@
 // Define the sensor pin
 const int moisturePin = A0;
 const int heartRatePin = A1;
+const int stressguagePin = A2;
+const int redPin = 3;
+const int greenPin = 5;
+const int bluePin = 6;
 
 void setup() {
   // Start the Serial communication to send data to the computer
