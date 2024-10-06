@@ -9,11 +9,11 @@ void setup() {
 }
 
 void loop() {
-  // Read the sensor value
-  int sensorValue = analogRead(sensorPin);
+  // Read the sensor values and shows opposie because lower value means more moisture, but need higher number
+  int sensorValue = 1024 - analogRead(sensorPin);
 
   // Print the sensor value to the Serial Monitor
-  Serial.println(1024 - sensorValue);
+  Serial.println(sensorValue);
 
   // Wait for a second before reading the sensor again
   delay(1000);
