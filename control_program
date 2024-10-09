@@ -29,8 +29,8 @@ int8_t validHeartRate; //indicator to show if the heart rate calculation is vali
 
 // Define the sensor pin
   const int moisturePin = A0;
-  const int heartRatePin = A1;
-  const int stressguagePin = A2;
+//  const int heartRatePin = A1;
+//  const int stressguagePin = A2;
   const int whitePin = 3;
   const int yellowPin = 5;
   const int redPin = 6;
@@ -65,17 +65,16 @@ void setup()
 void loop() {
   // Read the sensor value
   int moistureValue = analogRead(moisturePin);
-  int heartRateValue = analogRead(heartRatePin);
-  int stressguageValue = analogRead(stressguagePin);
+//  int heartRateValue = analogRead(heartRatePin);
+//  int stressguageValue = analogRead(stressguagePin);
+
+  
 
   // Print the sensor value to the Serial Monitor
-  Serial.println(moistureValue);
+//  Serial.println(heartRateValue);
 
   // Print the sensor value to the Serial Monitor
-  Serial.println(heartRateValue);
-
-  // Print the sensor value to the Serial Monitor
-  Serial.println(stressguageValue);
+//  Serial.println(stressguageValue);
 
   // Wait for a second before reading the sensor again
 
@@ -164,7 +163,21 @@ void loop() {
 
       Serial.print(F(", SPO2Valid="));
       Serial.println(validSPO2, DEC);
+
+      // Print the sensor value to the Serial Monitor
+      Serial.println(F(", Skin Moisture="));
+      Serial.println(1024 - moistureValue);
     }
+    
+
+    // Input the sensor value to the LED
+    analogWrite(whitePin, 255);
+
+    // Input the sensor value to the LED
+    analogWrite(yellowPin, 255);
+
+    // Input the sensor value to the LED
+    analogWrite(redPin, 255);
 
     //After gathering 25 new samples recalculate HR and SP02
     maxim_heart_rate_and_oxygen_saturation(irBuffer, bufferLength, redBuffer, &spo2, &validSPO2, &heartRate, &validHeartRate);
