@@ -24,13 +24,16 @@ int8_t validSPO2; //indicator to show if the SPO2 calculation is valid
 int32_t heartRate; //heart rate value
 int8_t validHeartRate; //indicator to show if the heart rate calculation is valid
 
- // byte pulseLED = 11; //Must be on PWM pin
- // byte readLED = 13; //Blinks with each data read
+  byte pulseLED = 11; //Must be on PWM pin
+  byte readLED = 13; //Blinks with each data read
 
 // Define the sensor pin
   const int moisturePin = A0;
+<<<<<<< HEAD
 //  const int heartRatePin = A1;
 //  const int stressguagePin = A2;
+=======
+>>>>>>> 209b7a943e2e6a881c1936e2ecbb0e8b6bc8e98a
   const int whitePin = 3;
   const int yellowPin = 5;
   const int redPin = 6;
@@ -39,8 +42,8 @@ void setup()
 {
   Serial.begin(115200); // initialize serial communication at 115200 bits per second:
 
-//  pinMode(pulseLED, OUTPUT);
-//  pinMode(readLED, OUTPUT);
+  pinMode(pulseLED, OUTPUT);
+  pinMode(readLED, OUTPUT);
 
   // Initialize sensor
   if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) //Use default I2C port, 400kHz speed
@@ -63,22 +66,34 @@ void setup()
   particleSensor.setup(ledBrightness, sampleAverage, ledMode, sampleRate, pulseWidth, adcRange); //Configure sensor with these settings
 }
 void loop() {
+
+  Serial.begin(115200); // initialize serial communication at 115200 bits per second:
+
   // Read the sensor value
   int moistureValue = analogRead(moisturePin);
+<<<<<<< HEAD
 //  int heartRateValue = analogRead(heartRatePin);
 //  int stressguageValue = analogRead(stressguagePin);
 
   
+=======
+>>>>>>> 209b7a943e2e6a881c1936e2ecbb0e8b6bc8e98a
 
   // Print the sensor value to the Serial Monitor
 //  Serial.println(heartRateValue);
 
+<<<<<<< HEAD
   // Print the sensor value to the Serial Monitor
 //  Serial.println(stressguageValue);
+=======
+  // Read the sensor values and shows opposie because lower value means more moisture, but need higher number
+  int sensorValue = 1024 - analogRead(moistureValue);
 
-  // Wait for a second before reading the sensor again
+  // Print the sensor value to the Serial Monitor
+  Serial.println(sensorValue);
+>>>>>>> 209b7a943e2e6a881c1936e2ecbb0e8b6bc8e98a
 
-  Serial.begin(115200); // initialize serial communication at 115200 bits per second:
+
 
   //pinMode(pulseLED, OUTPUT);
   //pinMode(readLED, OUTPUT);
@@ -182,6 +197,8 @@ void loop() {
     //After gathering 25 new samples recalculate HR and SP02
     maxim_heart_rate_and_oxygen_saturation(irBuffer, bufferLength, redBuffer, &spo2, &validSPO2, &heartRate, &validHeartRate);
     
+
+
     delay(1000);
   }
 }
