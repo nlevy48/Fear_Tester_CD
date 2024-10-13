@@ -24,23 +24,17 @@ int8_t validSPO2; //indicator to show if the SPO2 calculation is valid
 int32_t heartRate; //heart rate value
 int8_t validHeartRate; //indicator to show if the heart rate calculation is valid
 
-  byte pulseLED = 11; //Must be on PWM pin
-  byte readLED = 13; //Blinks with each data read
-
 // Define the sensor pin
   const int moisturePin = A0;
-//  const int heartRatePin = A1;
-//  const int stressguagePin = A2;
   const int whitePin = 3;
-  const int yellowPin = 5;
   const int redPin = 6;
   
 void setup()
 {
   Serial.begin(115200); // initialize serial communication at 115200 bits per second:
 
-  pinMode(pulseLED, OUTPUT);
-  pinMode(readLED, OUTPUT);
+  pinMode(whitePin, OUTPUT);
+  pinMode(redPin, OUTPUT);
 
   // Initialize sensor
   if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) //Use default I2C port, 400kHz speed
@@ -59,7 +53,6 @@ void setup()
   byte sampleRate = 100; //Options: 50, 100, 200, 400, 800, 1000, 1600, 3200
   int pulseWidth = 411; //Options: 69, 118, 215, 411
   int adcRange = 4096; //Options: 2048, 4096, 8192, 16384
-
   particleSensor.setup(ledBrightness, sampleAverage, ledMode, sampleRate, pulseWidth, adcRange); //Configure sensor with these settings
 }
 void loop() {
@@ -67,16 +60,10 @@ void loop() {
   Serial.begin(115200); // initialize serial communication at 115200 bits per second:
 
   // Read the sensor value
-  int moistureValue = analogRead(moisturePin);
+  int32_t moistureValue = analogRead(moisturePin);
 
-// Print the sensor value to the Serial Monitor
-//  Serial.println(heartRateValue);
-
-// Read the sensor values and shows opposie because lower value means more moisture, but need higher number
-  int sensorValue = 1024 - analogRead(moistureValue);
-
-  //pinMode(pulseLED, OUTPUT);
-  //pinMode(readLED, OUTPUT);
+  // Read the sensor values and shows opposite because lower value means more moisture, but need higher number
+  int32_t sensorValue = 1024 - analogRead(moistureValue);
 
   // Initialize sensor
   if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) //Use default I2C port, 400kHz speed
@@ -159,26 +146,24 @@ void loop() {
       Serial.print(F(", SPO2Valid="));
       Serial.println(validSPO2, DEC);
 
-      // Print the sensor value to the Serial Monitor
-      Serial.println(F("Skin Moisture: "))
-      Serial.println(1024 - moistureValue, DEC);
+      
+   
     }
-    
-
-    // Input the sensor value to the LED
-    analogWrite(whitePin, 255);
-
-    // Input the sensor value to the LED
-    analogWrite(yellowPin, 255);
-
-    // Input the sensor value to the LED
-    analogWrite(redPin, 255);
 
     //After gathering 25 new samples recalculate HR and SP02
     maxim_heart_rate_and_oxygen_saturation(irBuffer, bufferLength, redBuffer, &spo2, &validSPO2, &heartRate, &validHeartRate);
-    
 
+    // Print the sensor value to the Serial Monitor
+    Serial.println(F("Skin Moisture: "))
+    Serial.println(sensorValue, DEC);
 
+    // Input the moisture value to the LED
+    analogWrite(whitePin, ((sensorValue / 4) - 1)); // K value acquired by dividing 255 by 1025 and subtracting one
+
+    // Input the heartrate value to the LED
+    analogWrite(redPin, floor(heartRate * 1.243902439)); // K value acquired by subtracting 15 (avg age of high schooler) from 220 to get max heart rate, then dviding 255 by 205
+
+    // Wait for a second before reading the sensor again
     delay(1000);
   }
 }
