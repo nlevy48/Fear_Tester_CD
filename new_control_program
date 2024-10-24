@@ -96,7 +96,7 @@ void loop()
  analogWrite(whitePin, ((sensorValue / 4) - 1)); // K value acquired by dividing 255 by 1025 and subtracting one
 
  // Input the heartrate value to the LED
- analogWrite(redPin, floor(beatAvg * 1.243902439)); // K value acquired by subtracting 15 (avg age of high schooler) from 220 to get max heart rate, then dviding 255 by 205 to get K value
+ analogWrite(redPin, floor((6.37 * beatAvg) - 382.2)); // Formula acquired by using the linear regression model for 100:255, 90:191, 80:127, 70:64, 60:0
 
   if (irValue < 50000)
     Serial.print(" No finger?");
