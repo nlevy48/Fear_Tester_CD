@@ -38,12 +38,6 @@ long lastBeat = 0; //Time at which the last beat occurred
 float beatsPerMinute;
 int beatAvg;
 
-// Define the sensor pin
-  const int moisturePin = A0;
-  const int whitePin = 3;
-  const int redPin = 6;
-
-
 void setup()
 {
   Serial.begin(115200);
@@ -56,6 +50,10 @@ void setup()
     while (1);
   }
   Serial.println("Place your index finger on the sensor with steady pressure.");
+
+  particleSensor.setup(); //Configure sensor with default settings
+  particleSensor.setPulseAmplitudeRed(0x0A); //Turn Red LED to low to indicate sensor is running
+  particleSensor.setPulseAmplitudeGreen(0); //Turn off Green LED
 }
 
 void loop()
@@ -89,13 +87,6 @@ void loop()
   Serial.print(beatsPerMinute);
   Serial.print(", Avg BPM=");
   Serial.print(beatAvg);
-
- // Input the moisture value to the LED
- analogWrite(whitePin, ((sensorValue / 4) - 1)); // K value acquired by dividing 255 by 1025 and subtracting one
-
- // Input the heartrate value to the LED
- analogWrite(redPin, floor(heartRate * 1.243902439)); // K value acquired by subtracting 15 (avg age of high schooler) from 220 to get max heart rate, then dviding 255 by 205 to get K value
-
 
   if (irValue < 50000)
     Serial.print(" No finger?");

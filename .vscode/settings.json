@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "peripheral_program": "cpp"
+        "peripheral_program": "cpp",
+        "heart_rate": "cpp"
     }
 }
