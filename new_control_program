@@ -1,4 +1,4 @@
-
+ // ArduinoCode
 /*
   Hardware Connections (Breakoutboard to Arduino):
   -5V = 5V (3.3V is allowed)
@@ -96,10 +96,11 @@ void loop()
  analogWrite(whitePin, ceiling((0.2654166667(sensorValue)) - 16.98666667)); // function made using variables 64:0, 304:64, 544:127, 784:191, 1024:255 and linreg
 
  // Input the heartrate value to the LED
- analogWrite(redPin, ceiling((6.37 * (heartRate)) - 382.2)); // function made using variables 60:0, 70:64, 80:128, 90:192, 100:255 and linreg
+ analogWrite(redPin, ceiling((6.37 * (beatsPerMinute)) - 382.2)); // function made using variables 60:0, 70:64, 80:128, 90:192, 100:255 and linreg
 
-  if (irValue < 50000)
+  if (irValue < 50000) {
     Serial.print(" No finger?");
+  }
 
   Serial.println();
 }
