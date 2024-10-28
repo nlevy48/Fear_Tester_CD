@@ -1,17 +1,17 @@
- // ArduinoCode
+
 /*
   Hardware Connections (Breakoutboard to Arduino):
   -5V = 5V (3.3V is allowed)
   -GND = GND
-  -SDA = A4 (or SDA)
-  -SCL = A5 (or SCL)
+  -SDA (White Cord) = A4 (or SDA)
+  -SCL (Yellow) = A5 (or SCL)
   -INT = Not connected
 */
 
 // Define the sensor pin
- const int moisturePin = A0;
- const int whitePin = 3;
- const int redPin = 6;
+const int moisturePin = A0;
+const int whitePin = 3;
+const int redPin = 6;
 
 #include <Wire.h>
 #include "MAX30105.h"
@@ -30,9 +30,11 @@ int beatAvg;
 void setup()
 {
  Serial.begin(115200);
-
+ Serial.println(F("Initializing..."));
  pinMode(whitePin, OUTPUT);
  pinMode(redPin, OUTPUT);
+
+
 
   Serial.println(F("Attach sensor to finger to apparatus. Press any key to start conversion"));
   while (Serial.available() == 0) ; //wait until user presses a key
@@ -44,10 +46,8 @@ void setup()
     Serial.println("MAX30105 was not found. Please check wiring/power. ");
     while (1);
   }
- Serial.println("Place your index finger on the sensor with steady pressure.");
-
- particleSensor.setup(); //Configure sensor with default settings
-
+  Serial.println("Place your index finger on the sensor with steady pressure.");
+  particleSensor.setup(); //Configure sensor with default settings
 }
 
 void loop()
@@ -91,18 +91,25 @@ void loop()
  Serial.print(", Moisture=");
  Serial.print(sensorValue);
 
+ int ledMoistureValue = map(sensorValue, 64, 1024, 0, 255);
 
  // Input the moisture value to the LED
- analogWrite(whitePin, ceiling((0.2654166667(sensorValue)) - 16.98666667)); // function made using variables 64:0, 304:64, 544:127, 784:191, 1024:255 and linreg
+ analogWrite(whitePin, ledMoistureValue); // function made using variables 64:0, 304:64, 544:127, 784:191, 1024:255 and linreg
+ 
+ if (beatsPerMinute > 100) {
+  beatsPerMinute = 100;
+ }
+
+ int ledBPMValue = map(beatsPerMinute, 60, 100, 0, 255);
 
  // Input the heartrate value to the LED
- analogWrite(redPin, ceiling((6.37 * (beatsPerMinute)) - 382.2)); // function made using variables 60:0, 70:64, 80:128, 90:192, 100:255 and linreg
+ analogWrite(redPin, ledBPMValue); // function made using variables 60:0, 70:64, 80:128, 90:192, 100:255 and linreg
 
-  if (irValue < 50000) {
-    Serial.print(" No finger?");
-  }
-
+ if (irValue < 50000) {
+   Serial.print(" No finger?");
+ }
   Serial.println();
+  
 }
 
 

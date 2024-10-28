@@ -16,5 +16,5 @@ void loop() {
   Serial.println(sensorValue);
 
   // Wait for a second before reading the sensor again
-  delay(1000);
+  d
 }
